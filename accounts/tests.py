@@ -20,6 +20,7 @@ class SignUpTests(TestCase):
   def test_successful_signup_post(self):
     data = {
       'username' : 'new_user',
+      'email' : 'test@gmail.com',
       'password1': 'testpass1',
       'password2': 'testpass1',
     }
@@ -35,18 +36,26 @@ class SignUpTests(TestCase):
     self.assertFalse(User.objects.exists())
 
   def test_failure_post_with_password_too_short_password(self):
-    response = self.client.post(self.url, {'username' : 'new_user', 'password1' : 'jpo34', 'password2' : 'jpo34'})
-    self.assertFormError(response, 'form', 'password2', 'このパスワードは短すぎます。８文字以上で入力してください。')
+    response = self.client.post(self.url, {'username' : 'new_user', 'email' : 'test@gmail.com', 'password1' : 'jpo34', 'password2' : 'jpo34'})
+    self.assertFormError(response, 'form', 'password2', 'このパスワードは短すぎます。最低 8 文字以上必要です。')
 
   def test_failure_post_with_password_similar_to_username(self):
-    response = self.client.post(self.url, {'username' : 'new_user', 'password1' : 'new_user', 'password2' : 'new_user'})
-    self.assertFormError(response, 'form', 'password2', 'ユーザーネームとパスワードが違うものにしてください。')
+    response = self.client.post(self.url, {'username' : 'new_user', 'email' : 'test@gmail.com', 'password1' : 'new_user', 'password2' : 'new_user'})
+    self.assertFormError(response, 'form', 'password2', 'このパスワードは ユーザー名 と似すぎています。')
 
   def test_failure_post_with_only_numbers_password(self):
-    response = self.client.post(self.url, {'username' : 'new_user', 'password1' : '57892709', 'password2' : '57892709'})
-    self.assertFormError(response, 'form', 'password2', 'パスワードは英語と数字を組み合わせてください。')
+    response = self.client.post(self.url, {'username' : 'new_user', 'email' : 'test@gmail.com', 'password1' : '57892709', 'password2' : '57892709'})
+    self.assertFormError(response, 'form', 'password2', 'このパスワードは数字しか使われていません。')
   
   def test_failure_post_with_mismatch_password(self):
-    response = self.client.post(self.url, {'username' : 'new_user', 'password1' : 'testpass1', 'password2' : 'testpass2'})
+    response = self.client.post(self.url, {'username' : 'new_user', 'email' : 'test@gmail.com', 'password1' : 'testpass1', 'password2' : 'testpass2'})
     self.assertFormError(response, 'form', 'password2', '確認用パスワードが一致しません。')
+    
+    def test_failure_post_with_empty_email(self):
+      response = self.client.post(self.url, {'username' : 'new_user', 'email' : '', 'password1' : 'testpass1', 'password2' : 'testpass1'
+      })
+      self.assertFormError(response, 'form', 'email', 'メールアドレスを入力してください。')
 
+    def test_failure_post_with_invalid_email(self):
+      response = self.client.post(self.url, {'username' : 'new_user', 'email' : 'abc', 'password1' : 'testpass1', 'password2' : 'testpass'})
+      self.assertFormError(response, 'form', 'email', '有効なメールアドレスを入力してください。')
