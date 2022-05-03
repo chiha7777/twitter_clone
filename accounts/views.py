@@ -11,18 +11,18 @@ from .forms import SignUpForm
 User = get_user_model()
 
 class IndexView(TemplateView):
-  template_name = "accounts/index.html"
+    template_name = "accounts/index.html"
 
 class HomeView(TemplateView):
-  template_name = "accounts/home.html"
+    template_name = "accounts/home.html"
 
 class SignUpView(CreateView):
-  model = User
-  form_class = SignUpForm
-  template_name = "accounts/signup.html"
-  success_url = reverse_lazy("accounts:home")
+    model = User
+    form_class = SignUpForm
+    template_name = "accounts/signup.html"
+    success_url = reverse_lazy("accounts:home")
 
-  def form_valid(self, form):
-      user = form.save()
-      self.object = user
-      return super().form_valid(form)
+    def form_valid(self, form):
+        user = form.save()
+        self.object = user
+        return super().form_valid(form)
