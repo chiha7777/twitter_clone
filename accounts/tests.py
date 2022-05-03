@@ -1,14 +1,15 @@
 from django.test import TestCase
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
 from django.db.utils import IntegrityError
 from django.urls import resolve, reverse
 
-from .models import User
+
 from .views import singup
 
+User = get_user_model()
 
 class SignUpTests(TestCase):
   def setUp(self):
