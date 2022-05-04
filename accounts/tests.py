@@ -51,7 +51,7 @@ class SignUpTests(TestCase):
 
     def test_failure_post_with_empty_email(self):
         response = self.client.post(self.url, {'username' : 'new_user', 'email' : '', 'password1' : 'testpass1', 'password2' : 'testpass1'})
-        self.assertFormError(response, 'form', 'email', 'メールアドレスを入力してください。')
+        self.assertFormError(response, 'form', 'email', 'このフィールドは必須です。')
 
     def test_failure_post_with_invalid_email(self):
         response = self.client.post(self.url, {'username' : 'new_user', 'email' : 'abc', 'password1' : 'testpass1', 'password2' : 'testpass1'})

@@ -7,3 +7,5 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    email = models.EmailField(blank=False, max_length=254)
