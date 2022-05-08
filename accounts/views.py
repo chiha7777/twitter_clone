@@ -1,6 +1,3 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
-from django.http.response import HttpResponseRedirect
 from django.views.generic import TemplateView, CreateView
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
