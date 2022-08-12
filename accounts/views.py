@@ -28,10 +28,10 @@ class SignUpView(CreateView):
         return super().form_valid(form)
 
 
-class Login(LoginView):
+class UserLoginView(LoginView):
     form_class = LoginForm
     template_name = "accounts/login.html"
 
 
-class Logout(LogoutView):
+class UserLogoutView(LogoutView):
     pass
