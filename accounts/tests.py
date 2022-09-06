@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from config import settings
-from tweet.models import Tweet
 
 
 User = get_user_model()
@@ -26,9 +25,7 @@ class SignUpTests(TestCase):
 
         response = self.client.post(self.url, data=self.data)
         self.assertTrue(User.objects.exists())
-        self.assertRedirects(
-            response, reverse(settings.LOGIN_REDIRECT_URL), target_status_code=302
-        )
+        self.assertRedirects(response, reverse(settings.LOGIN_REDIRECT_URL))
 
     def test_invalid_signup_redirect_same_page_post(self):
         response = self.client.post(self.url, {})
@@ -182,28 +179,3 @@ class LogoutTest(TestCase):
     def test_success_get(self):
         response = self.client.get(reverse("accounts:logout"))
         self.assertRedirects(response, reverse("accounts:login"))
-
-
-class TestHomeView(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(
-            username="test_user", email="test@email.com", password="test_pass"
-        )
-        self.client.login(username="test_user", password="test_pass")
-        self.url = reverse("accounts:home")
-        Tweet.objects.create(
-            user=self.user,
-            content="test_tweet1",
-        )
-        Tweet.objects.create(
-            user=self.user,
-            content="test_tweet2",
-        )
-
-    def test_sccess_get(self):
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "accounts/home.html")
-        self.assertQuerysetEqual(
-            response.context["tweet_list"], Tweet.objects.order_by("-created_at")
-        )
