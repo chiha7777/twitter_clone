@@ -177,7 +177,7 @@ class TestLoginView(TestCase):
 class LogoutTest(TestCase):
     def setUp(self):
         User.objects.create_user("login_user", "", "testpass")
-        self.client.login(username="login_user", password="testpass")
+        self.client.login(username="login_pass", password="testpass")
 
     def test_success_get(self):
         response = self.client.get(reverse("accounts:logout"))
