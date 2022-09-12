@@ -1,9 +1,11 @@
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, ListView
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import SignUpForm, LoginForm
+from tweet.models import Tweet
 
 User = get_user_model()
 
@@ -12,8 +14,11 @@ class IndexView(TemplateView):
     template_name = "accounts/index.html"
 
 
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, ListView):
     template_name = "accounts/home.html"
+    context_object_name = "tweet_list"
+
+    queryset = Tweet.objects.all().select_related("user")
 
 
 class SignUpView(CreateView):
