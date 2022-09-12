@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
 
 from .forms import SignUpForm, LoginForm
 from tweet.models import Tweet
@@ -19,12 +18,7 @@ class HomeView(LoginRequiredMixin, ListView):
     template_name = "accounts/home.html"
     context_object_name = "tweet_list"
 
-    def get_queryset(self):
-        return Tweet.objects.all().select_related("user")
-
-    def tweet_detail(request, pk):
-        tweet = get_object_or_404(Tweet, pk=pk)
-        return render(request, "tweet/tweet_detail.html", {"tweet": tweet})
+    queryset = Tweet.objects.all().select_related("user")
 
 
 class SignUpView(CreateView):

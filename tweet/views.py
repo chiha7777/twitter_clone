@@ -8,7 +8,7 @@ from .forms import TweetForm
 
 
 class TweetDetailView(LoginRequiredMixin, DetailView):
-    model = Tweet
+    queryset = Tweet.objects.all().select_related("user")
     template_name = "tweet/tweet_detail.html"
     context_object_name = "tweet"
 
