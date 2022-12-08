@@ -1,0 +1,13 @@
+{% extends "accounts/base.html" %}
+
+{% block content %}
+<h1>フォロー一覧</h1>
+{% for follow in following_list %}
+<form action="{% url 'accounts:unfollow' follow.following.username %}" method="POST">
+  {% csrf_token %}
+  <button class="btn btn-outline-info" type="submit">{{ follow.following }}のフォローを解除する</button>
+</form>
+{% endfor %}
+<p><a href="{% url 'accounts:home' %}">トップページへ</a></p>
+
+{% endblock %}

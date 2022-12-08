@@ -18,8 +18,11 @@
       
     {% endfor %}
     <p>
+      <a href="{% url 'accounts:user_profile' user.pk %}">プロフィールを確認</a>
+    </p>
+    <p>
       <a href="{% url 'tweet:create' %}">ツイート作成</a>
-    <p/>
+    </p>
 
     <a href="{% url 'accounts:logout' %}">ログアウト</a>
   </div>

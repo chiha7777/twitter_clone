@@ -5,8 +5,12 @@
   <p>投稿者:{{object.user}}</p>
   <p>{{object.content}}</p>
 </div>
-{% if current_user == tweet_user %}
+<p><small>{{ tweet.created_at }}</small></p>
+
+{% if request.user == tweet.user %}
 <a href="{% url 'tweet:delete' tweet.pk %}"><button type="button" class="btn btn-secondary">削除</button></a>
+{% else %}
+<a href="{% url 'accounts:user_profile' tweet.user.pk %}">プロフィール</a>
 {% endif %}
 <p><a href="{% url 'accounts:home' %}">トップページへ</a></p>
 {% endblock%}
