@@ -88,7 +88,6 @@ class UserProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 class FollowView(LoginRequiredMixin, TemplateView):
-    model = FriendShip
 
     def post(self, request, *args, **kwargs):
         follower = self.request.user

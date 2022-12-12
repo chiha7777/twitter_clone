@@ -7,6 +7,14 @@
   {% csrf_token %}
   <button class="btn btn-outline-info" type="submit">{{ follow.following }}のフォローを解除する</button>
 </form>
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <div {% if message.tags %}class="{{ message.tags }}"{% endif %}>
+    {{ message }}
+  </div>
+  {% endfor %}
+{% endif %}
 {% endfor %}
 <p><a href="{% url 'accounts:home' %}">トップページへ</a></p>
 
