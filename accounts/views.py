@@ -54,24 +54,21 @@ class UserLogoutView(LogoutView):
 
 class UserProfileView(LoginRequiredMixin, DetailView):
     template_name = "accounts/profile.html"
-    model = Profile
 
-    def get_queryset(self):
-        return super().get_queryset().select_related("user")
+    queryset = Profile.objects.all().select_related("user")
 
     def get_context_data(self, *args, **kwargs):
-        ctx = super().get_context_data(*args, **kwargs)
+        context = super().get_context_data(*args, **kwargs)
         user = self.object.user
-        ctx["tweet_list"] = Tweet.objects.select_related("user").filter(user=user)
-        ctx["following_count"] = FriendShip.objects.filter(follower=user).count()
-        ctx["follower_count"] = FriendShip.objects.filter(following=user).count()
-        ctx["has_following_connection"] = (
+        context["tweet_list"] = Tweet.objects.select_related("user").filter(user=user)
+        context["following_count"] = FriendShip.objects.filter(follower=user).count()
+        context["follower_count"] = FriendShip.objects.filter(following=user).count()
+        context["has_following_connection"] = (
             FriendShip.objects.select_related("follower", "following")
             .filter(follower=self.request.user, following=user)
             .exists()
         )
-
-        return ctx
+        return context
 
 
 class UserProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -84,7 +81,7 @@ class UserProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         current_user = self.request.user
-        return current_user.pk == self.kwargs["pk"]
+        return current_user.profile.pk == self.kwargs["pk"]
 
 
 class FollowView(LoginRequiredMixin, TemplateView):
@@ -101,7 +98,7 @@ class FollowView(LoginRequiredMixin, TemplateView):
         elif FriendShip.objects.filter(follower=follower, following=following).exists():
             messages.error(request, "既にフォローしています。")
         else:
-            FriendShip.objects.get_or_create(follower=follower, following=following)
+            FriendShip.objects.create(follower=follower, following=following)
             messages.success(request, "フォローしました。")
         return HttpResponseRedirect(reverse_lazy("accounts:home"))
 

@@ -39,5 +39,12 @@ class FriendShip(models.Model):
         User, related_name="follower", on_delete=models.CASCADE
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["following", "follower"], name="follow_unique"
+            ),
+        ]
+
     def __str__(self):
         return f"{self.follower.username} : {self.following.username}"
