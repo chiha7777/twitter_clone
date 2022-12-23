@@ -1,0 +1,20 @@
+{% extends "accounts/base.html" %}
+
+{% block content %}
+<h1>フォロワー一覧</h1>
+{% for follow in follower_list %}
+{% if has_following_connection %}
+<form action="{% url 'accounts:unfollow' follow.follower.username %}" method="POST">
+  {% csrf_token %}
+  <button class="btn btn-outline-info" type="submit">{{ follow.follower }}をフォローを解除する</button>
+</form>
+{% else %}
+<form action="{% url 'accounts:follow' follow.follower.username %}" method="POST">
+  {% csrf_token %}
+  <button class="btn btn-outline-info" type="submit">{{ follow.follower }}をフォローする</button>
+</form>
+{% endif %}
+{% endfor %}
+<p><a href="{% url 'accounts:home' %}">トップページへ</a></p>
+
+{% endblock %}

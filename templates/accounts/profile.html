@@ -1,0 +1,48 @@
+{% extends "accounts/base.html" %}
+{% block content %}
+<h1>プロフィール</h1>
+<p>
+<ul>
+  <li>{{ profile.user.username }}</li>
+  <li>{{ profile.user.email }}</li>
+  <li>{% if profile.comment %}{{ profile.comment }} {% else %}コメント 未設定{% endif %}</li>
+</ul>
+
+{% if request.user == profile.user %}
+<a href="{% url 'accounts:user_profile_edit' user.profile.pk %}" <button type="button" class="btn btn-secondary">プロフィールを編集</button></a>
+{% endif %}
+</p>
+
+{% if profile.user != request.user %}
+{% if has_following_connection %}
+<form action="{% url 'accounts:unfollow' profile.user.username %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">フォロー解除</button>
+</form>
+{% else %}
+<form action="{% url 'accounts:follow' profile.user.username %}" method="POST">
+  {% csrf_token %}
+  <button type="submit">フォロー</button>
+</form>
+{% endif %}
+{% endif %}
+
+
+{% for tweet in tweet_list %}
+<div class="card">
+  <b class="card-header">{{ tweet.user }}</b>
+  <div class="card-body">
+      <p class="card-text">{{ tweet.content }}</p>
+  </div>
+  <div class="card-footer text-muted">
+      {{ tweet.created_at }}
+      <span><a href="{% url 'tweet:detail' pk=tweet.pk %}">詳細</a></span>
+  </div>
+</div>
+{% endfor %}
+<p>
+  <a href="{% url 'accounts:following_list' profile.user.pk %}">フォロー一覧:{{following_count}}人</a>
+  <a href="{% url 'accounts:follower_list' profile.user.pk %}">フォロワー一覧:{{follower_count}}人</a>
+</p>
+<p><a href="{% url 'accounts:home' %}">トップページへ</a></p>
+    {% endblock %}
